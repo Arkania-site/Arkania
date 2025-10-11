@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Arkania</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #ffa500;
+      font-family: 'Arial Black', sans-serif;
+      text-align: center;
+      padding-top: 100px;
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    .logo-container {
+      width: 300px;
+      height: 300px;
+      margin: 0 auto;
+      border-radius: 25px;
+      overflow: hidden;
+      border: 5px solid #ffa500;
+      box-shadow: 0 0 30px #ff8c00;
+    }
+
+    .logo-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    h1 {
+      margin-top: 30px;
+      font-size: 48px;
+      font-weight: bold;
+      color: #ffa500;
+      text-shadow: 2px 2px 5px #000;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 15px 40px;
+      background-color: #ffa500;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 15px #ff8c00;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #ff8c00;
+      box-shadow: 0 0 25px #ffa500;
+    }
+
+    #video-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background-color: black;
+    }
+
+    #maintenance-message {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 36px;
+      font-weight: bold;
+      color: #ffa500;
+      text-shadow: 0 0 10px #ff8c00, 0 0 20px #ffa500, 0 0 40px #ff8c00;
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% {
+        text-shadow: 0 0 10px #ff8c00, 0 0 20px #ffa500, 0 0 40px #ff8c00;
+      }
+      50% {
+        text-shadow: 0 0 20px #ffa500, 0 0 40px #ffae42, 0 0 60px #ff8c00;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-container" id="logo">
+    <img src="image.png" alt="Logo Arkania">
+  </div>
+  <h1 id="title">Arkania</h1>
+  <button class="btn" id="enterButton">Entrar</button>
+
+  <div id="video-container">
+    <video id="introVideo" preload="auto" playsinline>
+      <source src="video.mp4" type="video/mp4">
+      Seu navegador não suporta vídeos.
+    </video>
+  </div>
+
+  <div id="maintenance-message">Ainda estamos em manutenção</div>
+
+  <script>
+    const enterButton = document.getElementById('enterButton');
+    const logo = document.getElementById('logo');
+    const title = document.getElementById('title');
+    const videoContainer = document.getElementById('video-container');
+    const video = document.getElementById('introVideo');
+    const maintenanceMessage = document.getElementById('maintenance-message');
+
+    enterButton.addEventListener('click', async () => {
+      enterButton.style.display = 'none';
+      logo.style.display = 'none';
+      title.style.display = 'none';
+      videoContainer.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+
+      try {
+        video.currentTime = 0;
+        await video.play();
+      } catch (err) {
+        console.log("Reprodução bloqueada — adicionando controles temporários");
+        video.setAttribute('controls', true);
+        video.muted = true;
+        video.play();
+      }
+    });
+
+    video.addEventListener('ended', () => {
+      videoContainer.style.display = 'none';
+      maintenanceMessage.style.display = 'block';
+      document.body.style.overflow = 'auto';
+    });
+  </script>
+</body>
+</html>
