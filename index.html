@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -64,14 +65,11 @@
       box-shadow: 0 0 25px #ffa500;
     }
 
-    /* Vídeo fullscreen */
     #video-container {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background-color: black;
       justify-content: center;
       align-items: center;
@@ -80,14 +78,11 @@
 
     #introVideo {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       object-fit: cover;
     }
 
-    /* Discord logo */
     .discord-footer {
       position: fixed;
       bottom: 30px;
@@ -110,62 +105,56 @@
       opacity: 1;
     }
 
-    /* Mensagem de manutenção */
-    .maintenance-message {
+    .spoiler-text {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffa500;
+      text-shadow: 0 0 5px #ff8c00, 0 0 15px #ffa500, 0 0 30px #ff8c00;
+      opacity: 0;
+      display: none;
+      cursor: pointer;
+      transition: opacity 2s ease;
+    }
+
+    .spoiler-text:hover {
+      text-shadow: 0 0 10px #ff8c00, 0 0 25px #ffa500, 0 0 50px #ff8c00;
+    }
+
+    /* Texto neon no meio da tela */
+    .neon-text {
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 40px;
-      font-weight: bold;
       color: #ffa500;
-      text-shadow: 0 0 5px #ff8c00, 0 0 20px #ffa500, 0 0 40px #ff8c00;
-      display: none; /* escondida até o vídeo terminar */
-      opacity: 0;
-      transition: opacity 2s ease; /* fade-in */
-      animation: blink 3s infinite; /* piscar mais lento */
-    }
-
-    @keyframes blink {
-      0%, 50%, 100% {
-        text-shadow: 0 0 5px #ff8c00, 0 0 20px #ffa500, 0 0 40px #ff8c00;
-        opacity: 1;
-      }
-      25%, 75% {
-        text-shadow: 0 0 2px #ff8c00, 0 0 5px #ffa500, 0 0 10px #ff8c00;
-        opacity: 0.6;
-      }
+      font-family: 'Arial Black', sans-serif;
+      font-size: 42px;
+      font-weight: bold;
+      text-align: center;
+      text-shadow:
+        0 0 10px #ff8c00,
+        0 0 20px #ffa500,
+        0 0 40px #ff8c00,
+        0 0 60px #ffa500;
+      animation: blinkNeon 2.5s infinite;
+      user-select: none;
+      z-index: 20;
+      display: none;
     }
 
     @keyframes glow {
-      0%, 100% {
-        text-shadow: 0 0 10px #ff8c00, 0 0 20px #ffa500, 0 0 40px #ff8c00;
-      }
-      50% {
-        text-shadow: 0 0 20px #ffa500, 0 0 40px #ffae42, 0 0 60px #ff8c00;
-      }
+      0%,100% { text-shadow: 0 0 10px #ff8c00, 0 0 20px #ffa500, 0 0 40px #ff8c00; }
+      50% { text-shadow: 0 0 20px #ffa500,0 0 40px #ffae42,0 0 60px #ff8c00; }
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeInNeon {
-      0% { opacity: 0; text-shadow: none; }
-      50% { opacity: 0.5; text-shadow: 0 0 10px #ff8c00; }
-      100% { opacity: 1; }
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
-    @keyframes neonPulse {
-      0%, 100% { box-shadow: 0 0 15px #ff8c00; }
-      50% { box-shadow: 0 0 25px #ffa500; }
-    }
+    @keyframes fadeIn { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+    @keyframes fadeInNeon {0%{opacity:0;text-shadow:none;}50%{opacity:0.5;text-shadow:0 0 10px #ff8c00;}100%{opacity:1;} }
+    @keyframes pulse {0%,100%{transform:scale(1);}50%{transform:scale(1.05);} }
+    @keyframes neonPulse {0%,100%{box-shadow:0 0 15px #ff8c00;}50%{box-shadow:0 0 25px #ffa500;} }
+    @keyframes blinkNeon {0%,100%{opacity:1;}50%{opacity:0.4;} }
   </style>
 </head>
 <body>
@@ -182,12 +171,16 @@
     </video>
   </div>
 
-  <!-- Discord logo -->
   <div class="discord-footer" id="discordFooter">
     <a href="https://discord.gg/gkuEvUcc" target="_blank" rel="noopener noreferrer">
       <img src="discord.svg" alt="Discord" class="discord-logo">
     </a>
   </div>
+
+  <div class="spoiler-text" id="spoilerText">Spoiler do Mapa</div>
+
+  <!-- Texto neon central -->
+  <div class="neon-text" id="maintenanceText">IP do server em manutenção</div>
 
   <script>
     const enterButton = document.getElementById('enterButton');
@@ -196,6 +189,8 @@
     const videoContainer = document.getElementById('video-container');
     const video = document.getElementById('introVideo');
     const discordFooter = document.getElementById('discordFooter');
+    const spoilerText = document.getElementById('spoilerText');
+    const maintenanceText = document.getElementById('maintenanceText');
 
     enterButton.addEventListener('click', async () => {
       enterButton.style.display = 'none';
@@ -203,12 +198,10 @@
       title.style.display = 'none';
       videoContainer.style.display = 'flex';
       document.body.style.overflow = 'hidden';
-
       try {
         video.currentTime = 0;
         await video.play();
       } catch (err) {
-        alert("O vídeo não pôde ser reproduzido automaticamente. Use os controles para assistir.");
         video.setAttribute('controls', true);
         video.muted = true;
         video.play();
@@ -218,20 +211,18 @@
     video.addEventListener('ended', () => {
       videoContainer.style.display = 'none';
       document.body.style.overflow = 'auto';
-
-      // Criar a mensagem de manutenção dinamicamente
-      const maintenanceMessage = document.createElement('div');
-      maintenanceMessage.classList.add('maintenance-message');
-      maintenanceMessage.textContent = 'Ainda estamos em manutenção';
-      document.body.appendChild(maintenanceMessage);
-
-      // Fade-in para Discord e mensagem
       discordFooter.style.display = 'block';
-      maintenanceMessage.style.display = 'block';
+      spoilerText.style.display = 'block';
+      maintenanceText.style.display = 'block';
       setTimeout(() => {
         discordFooter.style.opacity = '1';
-        maintenanceMessage.style.opacity = '1';
+        spoilerText.style.opacity = '1';
       }, 50);
+    });
+
+    // Clique no Spoiler do Mapa: redireciona para nova página
+    spoilerText.addEventListener('click', () => {
+      window.location.href = 'mapa.html';
     });
   </script>
 </body>
