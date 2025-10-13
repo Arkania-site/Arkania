@@ -1,39 +1,42 @@
-<!-- mapa.html -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
   <title>Mapa - Arkania</title>
+  <link rel="icon" type="image/png" href="favicon.png">
   <style>
     body {
       background-color: #000;
+      color: #ffa500;
+      font-family: 'Arial Black', sans-serif;
       margin: 0;
       padding: 0;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      overflow: hidden;
-      gap: 30px;
+      gap: 20px;
     }
 
     img {
       max-width: 45%;
       height: auto;
-      border-radius: 15px;
-      box-shadow: 0 0 25px rgba(255, 165, 0, 0.5);
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      border: 3px solid #ffa500;
+      border-radius: 20px;
+      box-shadow: 0 0 25px #ff8c00;
+      transition: transform 0.3s ease;
     }
 
     img:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 40px rgba(255, 140, 0, 0.8);
+      transform: scale(1.03);
+      box-shadow: 0 0 40px #ffa500;
     }
   </style>
 </head>
 <body>
-  <!-- A ordem foi trocada aqui -->
-  <img src="2.png" alt="Imagem 2 do mapa Arkania">
-  <img src="1.png" alt="Imagem 1 do mapa Arkania">
+  <img src="1.png" alt="Mapa Esquerda">
+  <img src="2.png" alt="Mapa Direita">
 </body>
 </html>
+
+
