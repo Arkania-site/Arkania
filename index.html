@@ -1,9 +1,9 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
   <title>Arkania</title>
+  <link rel="icon" type="image/png" href="favicon.png">
   <style>
     body {
       background-color: #000;
@@ -78,9 +78,11 @@
 
     #introVideo {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
     }
 
     .discord-footer {
@@ -95,7 +97,7 @@
 
     .discord-logo {
       width: 60px;
-      height: auto;
+      height:auto;
       transition: transform 0.3s ease, opacity 0.3s ease;
       opacity: 0.9;
     }
@@ -105,6 +107,28 @@
       opacity: 1;
     }
 
+    /* Texto neon central (aparece após vídeo) */
+    .ip-text {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 45px;
+      font-weight: bold;
+      color: #ffa500;
+      text-shadow:
+        0 0 10px #ff8c00,
+        0 0 20px #ffa500,
+        0 0 40px #ff8c00,
+        0 0 60px #ffa500;
+      opacity: 0;
+      animation: glow 2s ease-in-out infinite;
+      z-index: 5;
+      user-select: none;
+      display: none;
+    }
+
+    /* Spoiler do mapa (como antes) */
     .spoiler-text {
       position: fixed;
       top: 20px;
@@ -123,44 +147,42 @@
       text-shadow: 0 0 10px #ff8c00, 0 0 25px #ffa500, 0 0 50px #ff8c00;
     }
 
-    /* Texto neon no meio da tela */
-    .neon-text {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: #ffa500;
-      font-family: 'Arial Black', sans-serif;
-      font-size: 42px;
-      font-weight: bold;
-      text-align: center;
-      text-shadow:
-        0 0 10px #ff8c00,
-        0 0 20px #ffa500,
-        0 0 40px #ff8c00,
-        0 0 60px #ffa500;
-      animation: blinkNeon 2.5s infinite;
-      user-select: none;
-      z-index: 20;
-      display: none;
-    }
-
     @keyframes glow {
-      0%,100% { text-shadow: 0 0 10px #ff8c00, 0 0 20px #ffa500, 0 0 40px #ff8c00; }
-      50% { text-shadow: 0 0 20px #ffa500,0 0 40px #ffae42,0 0 60px #ff8c00; }
+      0%,100% {
+        text-shadow: 0 0 10px #ff8c00, 0 0 20px #ffa500, 0 0 40px #ff8c00;
+      }
+      50% {
+        text-shadow: 0 0 20px #ffa500, 0 0 40px #ffae42, 0 0 60px #ff8c00;
+      }
     }
 
-    @keyframes fadeIn { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
-    @keyframes fadeInNeon {0%{opacity:0;text-shadow:none;}50%{opacity:0.5;text-shadow:0 0 10px #ff8c00;}100%{opacity:1;} }
-    @keyframes pulse {0%,100%{transform:scale(1);}50%{transform:scale(1.05);} }
-    @keyframes neonPulse {0%,100%{box-shadow:0 0 15px #ff8c00;}50%{box-shadow:0 0 25px #ffa500;} }
-    @keyframes blinkNeon {0%,100%{opacity:1;}50%{opacity:0.4;} }
+    @keyframes fadeIn {
+      from {opacity:0; transform:translateY(20px);}
+      to {opacity:1; transform:translateY(0);}
+    }
+
+    @keyframes fadeInNeon {
+      0%{opacity:0;text-shadow:none;}
+      50%{opacity:0.5;text-shadow:0 0 10px #ff8c00;}
+      100%{opacity:1;}
+    }
+
+    @keyframes pulse {
+      0%,100%{transform:scale(1);}
+      50%{transform:scale(1.05);}
+    }
+
+    @keyframes neonPulse {
+      0%,100%{box-shadow:0 0 15px #ff8c00;}
+      50%{box-shadow:0 0 25px #ffa500;}
+    }
   </style>
 </head>
 <body>
   <div class="logo-container" id="logo">
     <img src="image.png" alt="Logo Arkania">
   </div>
+
   <h1 id="title">Arkania</h1>
   <button class="btn" id="enterButton">Entrar</button>
 
@@ -177,10 +199,11 @@
     </a>
   </div>
 
-  <div class="spoiler-text" id="spoilerText">Spoiler do Mapa</div>
+  <!-- Texto Neon central -->
+  <div class="ip-text" id="ipText">IP do server em manutenção</div>
 
-  <!-- Texto neon central -->
-  <div class="neon-text" id="maintenanceText">IP do server em manutenção</div>
+  <!-- Spoiler do mapa -->
+  <div class="spoiler-text" id="spoilerText">Spoiler do Mapa</div>
 
   <script>
     const enterButton = document.getElementById('enterButton');
@@ -189,8 +212,8 @@
     const videoContainer = document.getElementById('video-container');
     const video = document.getElementById('introVideo');
     const discordFooter = document.getElementById('discordFooter');
+    const ipText = document.getElementById('ipText');
     const spoilerText = document.getElementById('spoilerText');
-    const maintenanceText = document.getElementById('maintenanceText');
 
     enterButton.addEventListener('click', async () => {
       enterButton.style.display = 'none';
@@ -212,19 +235,23 @@
       videoContainer.style.display = 'none';
       document.body.style.overflow = 'auto';
       discordFooter.style.display = 'block';
+      ipText.style.display = 'block';
       spoilerText.style.display = 'block';
-      maintenanceText.style.display = 'block';
+
+      // fade-in suave
       setTimeout(() => {
         discordFooter.style.opacity = '1';
+        ipText.style.opacity = '1';
         spoilerText.style.opacity = '1';
-      }, 50);
+      }, 200);
     });
 
-    // Clique no Spoiler do Mapa: redireciona para nova página
     spoilerText.addEventListener('click', () => {
       window.location.href = 'mapa.html';
     });
   </script>
 </body>
 </html>
+
+
 
